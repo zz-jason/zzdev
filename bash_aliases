@@ -14,4 +14,5 @@ alias mysql='mysql --prompt "\U:\d> " -A --comments'
 
 # impala
 export IMPALA_HOME=/home/impdev/impala
+export IMPALA_TOOLCHAIN=/opt/impala-toolchain
 export PYPI_MIRROR=https://pypi.tuna.tsinghua.edu.cn
