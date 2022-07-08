@@ -38,7 +38,7 @@ container as well:
 docker run --cap-add SYS_TIME -it \
            -p 25000:25000 -p 25010:25010 -p 25020:25020 \
            -v $IMPALA_SRC:/home/impdev/impala \
-           -v ${YOUR_IMPALA_TOOLCHAIN}:/opt/impala-toolchain
+           -v ${YOUR_IMPALA_TOOLCHAIN}:/home/impdev/impala-toolchain
            --name impala-dev \
            zzjason/impala-dev:ubuntu-20.04 bash
 ```
@@ -51,5 +51,15 @@ source $IMPALA_HOME/bin/impala-config.sh
 $IMPALA_HOME/buildall.sh -noclean -notests
 $IMPALA_HOME/bin/create-test-configuration.sh -create_metastore -create_ranger_policy_db
 $IMPALA_HOME/testdata/bin/run-all.sh
+$IMPALA_HOME/bin/start-impala-cluster.py
+```
+
+## Build Impala and run the cluster
+
+After making changings to the impala source code, you may need to build it and start the impala cluster to verify your modifications:
+
+```sh
+$IMPALA_HOME/buildall.sh -noclean -notests
+$IMPALA_HOME/bin/start-impala-cluster.py --kill
 $IMPALA_HOME/bin/start-impala-cluster.py
 ```
