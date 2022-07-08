@@ -10,9 +10,15 @@ alias zj='tmux -L jianzhang attach -t jianzhang'
 alias vi='vim'
 alias ll='ls -l'
 alias grep='grep --color -n'
-alias mysql='mysql --prompt "\U:\d> " -A --comments'
+
+# java
+export JAVA_HOME=$(compgen -G '/usr/lib/jvm/java-8-openjdk-*')
 
 # impala
 export IMPALA_HOME=/home/impdev/impala
-export IMPALA_TOOLCHAIN=/opt/impala-toolchain
+export IMPALA_TOOLCHAIN=/home/impdev/impala-toolchain
 export PYPI_MIRROR=https://pypi.tuna.tsinghua.edu.cn
+
+# cmake
+export CMAKE_HOME=$IMPALA_TOOLCHAIN/toolchain-packages-gcc7.5.0/cmake-3.22.2
+export PATH=$CMAKE_HOME/bin:$PATH
