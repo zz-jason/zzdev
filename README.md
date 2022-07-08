@@ -49,7 +49,7 @@ After the docker container is started, you can login to the docker and build:
 $IMPALA_HOME/bin/bootstrap_system.sh
 source $IMPALA_HOME/bin/impala-config.sh
 $IMPALA_HOME/buildall.sh -noclean -notests
-$IMPALA_HOME/bin/create-test-configuration.sh -create_metastore -create_sentry_policy_db
+$IMPALA_HOME/bin/create-test-configuration.sh -create_metastore -create_ranger_policy_db
 $IMPALA_HOME/testdata/bin/run-all.sh
 $IMPALA_HOME/bin/start-impala-cluster.py
 ```
