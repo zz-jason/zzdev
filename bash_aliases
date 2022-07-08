@@ -17,8 +17,8 @@ export JAVA_HOME=$(compgen -G '/usr/lib/jvm/java-8-openjdk-*')
 # impala
 export IMPALA_HOME=/home/impdev/impala
 export IMPALA_TOOLCHAIN=/home/impdev/impala-toolchain
-source $IMPALA_HOME/bin/impala-config.sh
 export PYPI_MIRROR=https://pypi.tuna.tsinghua.edu.cn
+source $IMPALA_HOME/bin/impala-config.sh
 
 # cmake
 export CMAKE_HOME=$IMPALA_TOOLCHAIN/toolchain-packages-gcc7.5.0/cmake-3.22.2
