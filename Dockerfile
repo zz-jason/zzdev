@@ -33,7 +33,6 @@ RUN wget -nv https://archive.apache.org/dist/maven/maven-3/3.5.4/binaries/apache
 COPY settings.xml /home/impdev/.m2/settings.xml
 COPY pip.conf     /home/impdev/.pip/pip.conf
 COPY tmux.conf    /home/impdev/.tmux.conf
-COPY ssh.conf     /home/impdev/.ssh/config
 COPY vimrc        /home/impdev/.vimrc
 COPY bash_aliases /home/impdev/.bash_aliases
 
