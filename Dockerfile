@@ -29,6 +29,12 @@ RUN wget -nv https://archive.apache.org/dist/maven/maven-3/3.5.4/binaries/apache
  && tar -C /usr/local -x --no-same-owner -zf apache-maven-3.5.4-bin.tar.gz \
  && ln -sf /usr/local/apache-maven-3.5.4/bin/mvn /usr/local/bin \
  && rm -rf apache-maven-3.5.4-bin.tar.gz
+ 
+ # install sslocal
+RUN wget https://github.com/shadowsocks/shadowsocks-rust/releases/download/v1.15.0-alpha.5/shadowsocks-v1.15.0-alpha.5.x86_64-unknown-linux-gnu.tar.xz \
+ && tar -xf shadowsocks-v1.15.0-alpha.5.x86_64-unknown-linux-gnu.tar.xz \
+ && rm -rf ssmanager ssserver ssservice ssurl shadowsocks-v1.15.0-alpha.5.x86_64-unknown-linux-gnu.tar.xz \
+ && mv sslocal /usr/local/bin
 
 COPY settings.xml /home/impdev/.m2/settings.xml
 COPY pip.conf     /home/impdev/.pip/pip.conf
