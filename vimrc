@@ -228,68 +228,156 @@ map <leader>pp :setlocal paste!<cr>
 "==============================================================================
 if empty(glob('~/.vim/autoload/plug.vim'))
     silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-                \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     autocmd VimEnter * PlugInstall --sync | source $HOME/.vimrc
 endif
 
 call plug#begin('~/.vim/plugged')
 
-" plugins don't need to specially config
-Plug 'Yggdroot/indentLine'
-Plug 'tpope/vim-surround'
-Plug 'jiangmiao/auto-pairs'
-Plug 'Raimondi/delimitMate'
-Plug 'AndrewRadev/splitjoin.vim'
-Plug 'dense-analysis/ale'
-Plug 'ervandew/supertab'
-Plug '/usr/local/opt/fzf'
-Plug 'mzlogin/vim-markdown-toc'
-Plug 'tmhedberg/SimpylFold'
-Plug 'davidhalter/jedi-vim'
-Plug 'vim-scripts/restore_view.vim'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install()  }  }
-
-" plugins with special config
-Plug 'Yggdroot/LeaderF', {'do': './install.sh'}
-Plug 'scrooloose/nerdtree', {'on': 'NERDTreeToggle'}
-Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'ludovicchabant/vim-gutentags'
-Plug 'SirVer/ultisnips'
-Plug 'tabnine/YouCompleteMe', {'for': ['c', 'cpp', 'python'], 'do': './install.py --clangd-completer --verbose'}
-Plug 'skywind3000/asyncrun.vim', {'on': 'AsyncRun'}
-Plug 'rking/ag.vim'
+" status/window/tabline beautifications
 Plug 'altercation/vim-colors-solarized'
+Plug 'Yggdroot/indentLine'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'airblade/vim-gitgutter'
-Plug 'tpope/vim-fugitive'
 
-" plugins for programming languages
+" programming languages
 Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'}
 Plug 'rust-lang/rust.vim'
+
+" navigation
+Plug 'scrooloose/nerdtree', {'on': 'NERDTreeToggle'}
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'tmhedberg/SimpylFold'
+Plug 'vim-scripts/restore_view.vim'
+
+" searching
+Plug '/usr/local/opt/fzf'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install()  }  }
+Plug 'Yggdroot/LeaderF', {'do': './install.sh'}
+Plug 'rking/ag.vim'
+Plug 'tpope/vim-fugitive'
+
+" editing & completion
+Plug 'dense-analysis/ale'
+Plug 'ervandew/supertab'
+Plug 'mzlogin/vim-markdown-toc'
+Plug 'Raimondi/delimitMate'
+Plug 'jiangmiao/auto-pairs'
+Plug 'tpope/vim-surround'
+Plug 'SirVer/ultisnips'
+Plug 'ludovicchabant/vim-gutentags'
+Plug 'github/copilot.vim', {'do': ':Copilot setup'}
+
+" others
+Plug 'skywind3000/asyncrun.vim', {'on': 'AsyncRun'}
+
+" plugins for language server protocolprogramming
+" Plug 'prabirshrestha/vim-lsp'
+" Plug 'mattn/vim-lsp-settings'
+" Plug 'prabirshrestha/asyncomplete.vim'
 
 call plug#end()
 
 
- "==============================================================================
- "                           "vim-scripts/restore_view.vim"
- "==============================================================================
- set viewoptions=cursor,folds,slash,unix
- " let g:skipview_files = ['*\.vim']
+"==============================================================================
+"                      "altercation/vim-colors-solarized"
+"==============================================================================
+syntax enable
+if has('gui_running')
+    set background=light
+else
+    set background=dark
+endif
+try
+    colorscheme solarized
+catch
+endtry
+
+
+"==============================================================================
+"        "vim-airline/vim-airline", "vim-airline/vim-airline-themes"
+"==============================================================================
+let g:airline_theme="solarized"
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#buffer_nr_show = 1
+let g:airline#extensions#whitespace#enabled = 0
+let g:airline#extensions#whitespace#symbol = '!'
+let g:airline_left_sep=''
+let g:airline_right_sep=''
+
+
+"==============================================================================
+"                           "fatih/vim-go"
+"==============================================================================
+let g:go_auto_type_info = 0
+let g:go_auto_sameids = 0
+let g:go_info_mode = 'guru'
+let g:go_updatetime = 500
+let g:go_def_reuse_buffer = 1
+
+let g:go_highlight_types = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_function_calls = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_build_constraints = 1
+let g:go_def_mode = 'godef'
+let g:go_fmt_command = "goimports"
+
+
+"==============================================================================
+"                           "rust-lang/rust.vim"
+"==============================================================================
+let g:rustfmt_autosave = 1
+
+
+"==============================================================================
+"                           "scrooloose/nerdtree"
+"==============================================================================
+nmap ft :NERDTreeToggle<cr>
+let NERDTreeMinimalUI = 1
+autocmd StdinReadPre * let s:std_in=1
+autocmd vimenter * if argc() == 0 && !exists("s:std_in") | exe 'NERDTree' | endif
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+
+"==============================================================================
+"                           "Xuyuanp/nerdtree-git-plugin"
+"==============================================================================
+let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "✹",
+    \ "Staged"    : "✚",
+    \ "Untracked" : "✭",
+    \ "Renamed"   : "➜",
+    \ "Unmerged"  : "═",
+    \ "Deleted"   : "✖",
+    \ "Dirty"     : "✗",
+    \ "Clean"     : "✔︎",
+    \ "Unknown"   : "?"
+    \ }
+
+
+"==============================================================================
+"                           "vim-scripts/restore_view.vim"
+"==============================================================================
+set viewoptions=cursor,folds,slash,unix
 
 
 "==============================================================================
 "                           "Yggdroot/LeaderF"
 "==============================================================================
-noremap <Leader>f :LeaderfFunction!<cr>
-noremap <Leader>b :LeaderfBuffer<cr>
-noremap <Leader>s :LeaderfSelf<cr>
-
 set rtp+=/usr/local/opt/fzf
-noremap <C-p> :FZF<cr>
+
+noremap <C-P> :FZF<cr>
+noremap fb :LeaderfBuffer<cr>
+noremap fw :LeaderfWindow<cr>
+noremap fs :LeaderfSelf<cr>
+noremap fm :LeaderfMru<cr>
+
 let g:fzf_layout = { 'down': '30%' }
 
-let g:Lf_WindowPosition = 'bottom'
+" let g:Lf_WindowPosition = 'bottom'
+let g:Lf_WindowPosition = 'popup'
 let g:Lf_WindowHeight = 10
 let g:Lf_ShowRelativePath = 0
 let g:Lf_CursorBlink = 0
@@ -310,29 +398,18 @@ let g:Lf_NormalMap = {
 
 
 "==============================================================================
-"                           "nerdtree"
+"                           "rking/ag.vim"
 "==============================================================================
-nmap ft :NERDTreeToggle<cr>
-let NERDTreeMinimalUI = 1
-autocmd StdinReadPre * let s:std_in=1
-autocmd vimenter * if argc() == 0 && !exists("s:std_in") | exe 'NERDTree' | endif
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+let g:ag_prg="ag --vimgrep --smart-case --column"
+let g:ag_highlight=1
 
 
 "==============================================================================
-"                           "nerdtree-git-plugin"
+"                           "SirVer/ultisnips"
 "==============================================================================
-let g:NERDTreeIndicatorMapCustom = {
-    \ "Modified"  : "✹",
-    \ "Staged"    : "✚",
-    \ "Untracked" : "✭",
-    \ "Renamed"   : "➜",
-    \ "Unmerged"  : "═",
-    \ "Deleted"   : "✖",
-    \ "Dirty"     : "✗",
-    \ "Clean"     : "✔︎",
-    \ "Unknown"   : "?"
-    \ }
+let g:UltiSnipsExpandTrigger       = "<tab>"
+let g:UltiSnipsJumpForwardTrigger  = "<tab>"
+let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 
 
 "==============================================================================
@@ -353,99 +430,8 @@ endif
 
 
 "==============================================================================
-"                           "SirVer/ultisnips"
-"==============================================================================
-let g:UltiSnipsExpandTrigger       = "<tab>"
-let g:UltiSnipsJumpForwardTrigger  = "<tab>"
-let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
-
-
-"==============================================================================
-"                           "Valloric/YouCompleteMe"
-"==============================================================================
-" let g:ycm_clangd_binary_path = trim(system('brew --prefix llvm')).'/bin/clangd'
-let g:ycm_add_preview_to_completeopt = 0
-let g:ycm_show_diagnostics_ui = 0
-let g:ycm_server_log_level = 'info'
-let g:ycm_min_num_identifier_candidate_chars = 2
-let g:ycm_min_num_of_chars_for_completion = 2
-let g:ycm_collect_identifiers_from_comments_and_strings = 1
-let g:ycm_complete_in_strings=1
-let g:ycm_key_invoke_completion = '<c-z>'
-
-" make YCM compatible with UltiSnips (using supertab)
-let g:ycm_key_list_select_completion   = ['<C-n>', '<Down>']
-let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
-let g:SuperTabDefaultCompletionType    = '<C-n>'
-
-set completeopt=menu,menuone
-noremap <c-z> <NOP>
-let g:ycm_semantic_triggers =  {
-            \ 'python,go,rust': ['re!\w{2}'],
-            \ }
-
-
-"==============================================================================
 "                           "skywind3000/asyncrun.vim"
 "==============================================================================
 let g:asyncrun_open = 6
 let g:asyncrun_bell = 1
 let g:asyncrun_rootmarks = ['.root', '.svn', '.git', '.hg', '.project']
-
-
-"==============================================================================
-"                           "rking/ag.vim"
-"==============================================================================
-let g:ag_prg="ag --vimgrep --smart-case --column"
-let g:ag_highlight=1
-
-
-"==============================================================================
-"                           "vim-colors-solarized"
-"==============================================================================
-syntax enable
-if has('gui_running')
-    set background=light
-else
-    set background=dark
-endif
-try
-    colorscheme solarized
-catch
-endtry
-
-
-"==============================================================================
-"                           "vim-airline", "vim-airline-themes"
-"==============================================================================
-let g:airline_theme="solarized"
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#buffer_nr_show = 1
-let g:airline#extensions#whitespace#enabled = 0
-let g:airline#extensions#whitespace#symbol = '!'
-let g:airline_left_sep=''
-let g:airline_right_sep=''
-
-
-"==============================================================================
-"                           "vim-go"
-"==============================================================================
-let g:go_auto_type_info = 0
-let g:go_auto_sameids = 0
-let g:go_info_mode = 'guru'
-let g:go_updatetime = 500
-let g:go_def_reuse_buffer = 1
-
-let g:go_highlight_types = 1
-let g:go_highlight_functions = 1
-let g:go_highlight_function_calls = 1
-let g:go_highlight_operators = 1
-let g:go_highlight_build_constraints = 1
-let g:go_def_mode = 'godef'
-let g:go_fmt_command = "goimports"
-
-
-"==============================================================================
-"                           "rust.vim"
-"==============================================================================
-let g:rustfmt_autosave = 1
