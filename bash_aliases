@@ -9,6 +9,7 @@ export PS1='\n[\e[0;36m\u@\h\e[m:\e[0;34m\W\e[m]\n\e[0;32m\$\e[m '
 alias ssh='ssh -o ServerAliveInterval=30'
 alias zj='tmux -L jianzhang attach -t jianzhang'
 alias vi='vim'
+alias fvi='vim $(fzf --height 40%)'
 alias ll='ls -l'
 alias grep='grep --color -n'
 
