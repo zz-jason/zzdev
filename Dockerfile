@@ -1,49 +1,76 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 RUN ln -snf /usr/share/zoneinfo/'Asia/Shanghai' /etc/localtime && echo 'Asia/Shanghai' > /etc/timezone
 RUN sed -i s@/archive.ubuntu.com/@/mirrors.tuna.tsinghua.edu.cn/@g /etc/apt/sources.list
 RUN sed -i s@/security.ubuntu.com/@/mirrors.tuna.tsinghua.edu.cn/@g /etc/apt/sources.list
 
+################################################################################
 # install prerequisted libriaries
+################################################################################
 RUN apt-get update && apt-get install -y \
-        sudo apt-utils psmisc curl wget git ssh lsof gawk vim vim-common tmux \
-        libffi-dev \
+        sudo apt-utils curl wget git psmisc libffi-dev \
         libsasl2-dev libsasl2-modules libsasl2-modules-gssapi-mit libssl-dev \
-        postgresql \
-        python-dev python-setuptools \
-        openjdk-8-jdk openjdk-8-source openjdk-8-dbg ant\
-        g++ gcc ccache make ninja-build \
-        fzf ctags \
-        silversearcher-ag htop \
  && rm -rf /var/lib/apt/lists/*
 
+
+################################################################################
+# install tools to improve efficiency
+################################################################################
+RUN apt-get update && apt-get install -y \
+    zsh tmux htop ssh lsof gawk \
+    vim vim-common fzf universal-ctags silversearcher-ag \
+ && rm -rf /var/lib/apt/lists/*
+
+
+################################################################################
+# install python related tools
+################################################################################
+RUN apt-get update && apt-get install -y \
+        python-setuptools \
+ && rm -rf /var/lib/apt/lists/*
+
+
+################################################################################
+# install cmake & gcc related tools
+################################################################################
+RUN apt-get update && apt-get install -y \
+        cmake g++ gcc ccache make ninja-build \
+ && rm -rf /var/lib/apt/lists/*
+
+
+################################################################################
+# install java related tools
+################################################################################
+RUN wget -nv https://download.java.net/java/GA/jdk19/877d6127e982470ba2a7faa31cc93d04/36/GPL/openjdk-19_linux-x64_bin.tar.gz \
+ && tar -C /usr/local -x --no-same-owner -zf openjdk-19_linux-x64_bin.tar.gz \
+ && rm -rf openjdk-19_linux-x64_bin.tar.gz
+
+RUN wget -nv https://archive.apache.org/dist/maven/maven-3/3.8.6/binaries/apache-maven-3.8.6-bin.tar.gz \
+ && tar -C /usr/local -x --no-same-owner -zf apache-maven-3.8.6-bin.tar.gz \
+ && rm -rf apache-maven-3.8.6-bin.tar.gz
+
+
+################################################################################
 # create user
-RUN adduser --disabled-password --gecos '' impdev \
- && echo 'impdev ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers \
- && mkdir -p /home/impdev/.m2 \
- && mkdir -p /home/impdev/.pip \
- && update-java-alternatives -s java-1.8.0-openjdk-amd64
+################################################################################
+RUN adduser --disabled-password --gecos '' --shell /usr/bin/zsh --force-badname jian.z \
+ && echo 'jian.z ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
-# install maven
-RUN wget -nv https://archive.apache.org/dist/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.tar.gz \
- && tar -C /usr/local -x --no-same-owner -zf apache-maven-3.5.4-bin.tar.gz \
- && ln -sf /usr/local/apache-maven-3.5.4/bin/mvn /usr/local/bin \
- && rm -rf apache-maven-3.5.4-bin.tar.gz
- 
- # install sslocal
-RUN wget https://github.com/shadowsocks/shadowsocks-rust/releases/download/v1.15.0-alpha.5/shadowsocks-v1.15.0-alpha.5.x86_64-unknown-linux-gnu.tar.xz \
- && tar -xf shadowsocks-v1.15.0-alpha.5.x86_64-unknown-linux-gnu.tar.xz \
- && rm -rf ssmanager ssserver ssservice ssurl shadowsocks-v1.15.0-alpha.5.x86_64-unknown-linux-gnu.tar.xz \
- && mv sslocal /usr/local/bin
+RUN mkdir -p /home/jian.z/.m2 \
+ && mkdir -p /home/jian.z/.pip
 
-COPY settings.xml /home/impdev/.m2/settings.xml
-COPY pip.conf     /home/impdev/.pip/pip.conf
-COPY tmux.conf    /home/impdev/.tmux.conf
-COPY vimrc        /home/impdev/.vimrc
-COPY bash_aliases /home/impdev/.bash_aliases
+COPY settings.xml /home/jian.z/.m2/settings.xml
+COPY pip.conf     /home/jian.z/.pip/pip.conf
+COPY zshrc        /home/jian.z/.zshrc
+COPY tmux.conf    /home/jian.z/.tmux.conf
+COPY vimrc        /home/jian.z/.vimrc
 
-RUN chown -R impdev:impdev /home/impdev
 
-USER impdev
-WORKDIR /home/impdev
-CMD ["bash"]
+################################################################################
+# Other settings
+################################################################################
+RUN chown -R jian.z:jian.z /home/jian.z
+
+USER jian.z
+WORKDIR /home/jian.z
+CMD ["/usr/bin/zsh"]
