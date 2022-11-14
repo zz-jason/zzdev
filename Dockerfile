@@ -8,8 +8,9 @@ RUN sed -i s@/security.ubuntu.com/@/mirrors.tuna.tsinghua.edu.cn/@g /etc/apt/sou
 # install prerequisted libriaries
 ################################################################################
 RUN apt-get update && apt-get install -y \
-        sudo apt-utils curl wget git psmisc libffi-dev \
-        libsasl2-dev libsasl2-modules libsasl2-modules-gssapi-mit libssl-dev \
+        sudo apt-utils curl wget git psmisc libffi-dev libncurses5-dev \
+        libncursesw5-dev libevent-dev libsasl2-dev libsasl2-modules \
+        libsasl2-modules-gssapi-mit libssl-dev libudev-dev \
  && rm -rf /var/lib/apt/lists/*
 
 
@@ -34,7 +35,7 @@ RUN apt-get update && apt-get install -y \
 # install cmake & gcc related tools
 ################################################################################
 RUN apt-get update && apt-get install -y \
-        cmake g++ gcc ccache make ninja-build \
+        cmake g++ gcc ccache make pkg-config bison flex gdb ninja-build \
  && rm -rf /var/lib/apt/lists/*
 
 
