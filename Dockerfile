@@ -1,4 +1,4 @@
-FROM ubuntu:22.10
+FROM ubuntu:23.04
 
 RUN ln -snf /usr/share/zoneinfo/'Asia/Shanghai' /etc/localtime && echo 'Asia/Shanghai' > /etc/timezone
 RUN sed -i s@/archive.ubuntu.com/@/mirrors.tuna.tsinghua.edu.cn/@g /etc/apt/sources.list
@@ -29,14 +29,6 @@ RUN apt-get update && apt-get install -y \
 
 
 ################################################################################
-# install python related tools
-################################################################################
-RUN apt-get update && apt-get install -y \
-        python-setuptools \
- && rm -rf /var/lib/apt/lists/*
-
-
-################################################################################
 # install java related tools
 ################################################################################
 RUN wget -nv https://download.java.net/java/GA/jdk19/877d6127e982470ba2a7faa31cc93d04/36/GPL/openjdk-19_linux-x64_bin.tar.gz \
@@ -51,13 +43,27 @@ RUN apt-get update \
  && apt-get install -y libaio-dev libtbb-dev \
  && rm -rf /var/lib/apt/lists/*
 
+
 ################################################################################
 # install google related cpp tools
 ################################################################################
 RUN apt-get update && apt-get install -y \
-        libabsl-dev libgoogle-glog-dev \
+        libabsl-dev libgoogle-glog-dev libgtest-dev libgmock-dev \
+        googletest google-mock google-perftools libgoogle-perftools-dev \
  && rm -rf /var/lib/apt/lists/*
 
+
+################################################################################
+# install numa relaed tools
+################################################################################
+RUN apt-get update && apt-get install -y \
+    libnuma-dev \
+ && rm -rf /var/lib/apt/lists/*
+
+
+################################################################################
+# copy files
+################################################################################
 RUN mkdir -p /root/.m2 \
  && mkdir -p /root/.pip
 
